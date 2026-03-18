@@ -342,23 +342,23 @@ tr.sec-break td{border-top:2px solid var(--border);padding-top:9px;}
     <span id="loadStatusText">Loading…</span>
   </div>
 
-  <!-- data source toggle -->
-  <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
-    <span class="lbl">Data source</span>
-    <select class="cinput" id="dataSourceSelect" onchange="onSourceChange()" style="min-width:170px">
-      <option value="api">Live API (real-time)</option>
-      <option value="repo">GitHub repo CSV</option>
-    </select>
-    <input class="cinput" id="repoBase" type="text" placeholder="https://raw.githubusercontent.com/YOU/REPO/main/data"
-           style="display:none;min-width:380px" onchange="onAreaChange()">
+  <button class="btn-print" onclick="loadData()" style="background:var(--amber);padding:6px 16px;font-size:10px">▶ Load Data</button>
+
+  <!-- repo URL (always visible — leave empty to use live API) -->
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+    <span class="lbl" style="white-space:nowrap">GitHub data URL</span>
+    <input class="cinput" id="repoBase" type="text"
+           placeholder="Paste your raw GitHub URL here — leave empty to use live API"
+           style="flex:1;min-width:260px;max-width:520px"
+           onchange="onAreaChange()">
   </div>
 </div>
 
 <div class="main" id="mainArea">
   <div class="empty" id="emptyState">
     <div style="font-size:40px;opacity:.3">🌵</div>
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Initialising…</div>
-    <div style="font-size:10px;color:var(--text-dim)">Loading area list from USDM</div>
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Ready</div>
+    <div style="font-size:10px;color:var(--text-dim)">Select an area type and area above, then click Load Data</div>
   </div>
   <div id="dash" style="display:none"></div>
 </div>
@@ -415,22 +415,19 @@ let CURRENT_COUNTY    = '';
 /* ══════════════════════════════════════════════════════
    SELECTOR LOGIC
 ══════════════════════════════════════════════════════ */
-function onSourceChange(){
-  const src = document.getElementById('dataSourceSelect').value;
-  document.getElementById('repoBase').style.display = src === 'repo' ? '' : 'none';
-}
+function onSourceChange(){}
 
 function onAreaTypeChange(){
   CURRENT_AREA_TYPE = document.getElementById('areaTypeSelect').value;
-  const def   = AREA_DEFS[CURRENT_AREA_TYPE];
-  const sel   = document.getElementById('areaSelect');
+  const def = AREA_DEFS[CURRENT_AREA_TYPE];
+  const sel = document.getElementById('areaSelect');
   sel.innerHTML = Object.entries(def.items)
     .map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
   CURRENT_AOI    = sel.value;
   CURRENT_COUNTY = '';
   document.getElementById('countyLbl').style.display    = 'none';
   document.getElementById('countySelect').style.display = 'none';
-  loadData();
+  document.getElementById('loadStatus').style.display   = 'none';
 }
 
 function onAreaChange(){
@@ -438,7 +435,7 @@ function onAreaChange(){
   CURRENT_COUNTY = '';
   document.getElementById('countyLbl').style.display    = 'none';
   document.getElementById('countySelect').style.display = 'none';
-  loadData();
+  document.getElementById('loadStatus').style.display   = 'none';
 }
 
 function onCountyChange(){
@@ -459,14 +456,15 @@ function setStatus(msg, ok=true){
 async function loadData(){
   const def    = AREA_DEFS[CURRENT_AREA_TYPE];
   const label  = def.items[CURRENT_AOI] || CURRENT_AOI;
-  const source = document.getElementById('dataSourceSelect').value;
+  const repoUrl = document.getElementById('repoBase').value.trim();
+  const source  = repoUrl ? 'repo' : 'api';
 
   document.getElementById('dash').style.display = 'none';
   document.getElementById('emptyState').style.display = 'flex';
   document.getElementById('emptyState').innerHTML = `
     <div style="font-size:28px;opacity:.5">⧗</div>
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Loading ${label}…</div>
-    <div style="font-size:10px;color:var(--text-dim)">Fetching from ${source === 'api' ? 'USDM API' : 'GitHub repo'}…</div>`;
+    <div style="font-size:10px;color:var(--text-dim)">Fetching from ${source === 'api' ? 'USDM live API' : 'GitHub repo'}…</div>`;
   setStatus(`Loading ${label}…`);
 
   try {
@@ -496,10 +494,17 @@ async function loadData(){
     }
   } catch(e){
     setStatus(`Error: ${e.message}`, false);
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('dash').style.display = 'none';
     document.getElementById('emptyState').innerHTML = `
       <div style="font-size:28px;opacity:.5">⚠</div>
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c">Failed to load</div>
-      <div style="font-size:10px;color:var(--text-dim);max-width:420px;text-align:center;line-height:1.8">${e.message}</div>`;
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c">Failed to load data</div>
+      <div style="font-size:11px;color:var(--text-dim);max-width:500px;text-align:center;line-height:1.8;margin-top:8px">
+        <strong style="color:#e74c3c">${e.message}</strong><br><br>
+        If using Live API: the USDM API may be temporarily down, or your browser may be blocking cross-origin requests.<br>
+        Try opening the page from a web server (GitHub Pages) rather than a local file.<br><br>
+        If using GitHub repo CSV: check that the URL is correct and the data/ folder exists in your repo.
+      </div>`;
   }
 }
 
@@ -516,7 +521,7 @@ async function fetchFromAPI(){
 }
 
 async function fetchFromRepo(){
-  const repoBase = document.getElementById('repoBase').value.replace(/\/$/, '');
+  const repoBase = document.getElementById('repoBase').value.trim().replace(/\/$/, '');
   if(!repoBase) throw new Error('Enter your GitHub raw URL in the data source field');
   // Map area type + aoi to filename
   const filename = CURRENT_AREA_TYPE === 'county'
@@ -650,8 +655,10 @@ function selectSubArea(areaName){
    INITIALISE
 ══════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', ()=>{
-  onAreaTypeChange();
+  onAreaTypeChange();  // populates dropdowns only — no data fetch until user clicks Load Data
 });
+
+</script>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -704,31 +711,7 @@ Chart.defaults.borderColor='#1e2330';
 Chart.defaults.font.family="'IBM Plex Mono',monospace";
 Chart.defaults.font.size=9;
 
-/* ═══════════════════════════════════════════════════
-   FILE UPLOAD
-═══════════════════════════════════════════════════ */
-const dz=document.getElementById('dropZone'),fi=document.getElementById('csvFile');
-dz.addEventListener('click',()=>fi.click());
-fi.addEventListener('change',e=>{if(e.target.files[0])load(e.target.files[0]);});
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='var(--amber)';});
-dz.addEventListener('dragleave',()=>dz.style.borderColor='');
-dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';if(e.dataTransfer.files[0])load(e.dataTransfer.files[0]);});
-document.getElementById('commodityName').addEventListener('change',()=>{if(GD.length)render(GD);});
-
-function load(f){
-  document.getElementById('fileName').textContent=f.name;
-  document.getElementById('fileInfo').style.display='flex';
-  Papa.parse(f,{header:true,skipEmptyLines:true,complete:r=>{GD=parseData(r.data);render(GD);}});
-}
-function parseData(raw){
-  return raw.map(r=>{
-    const wk=r['Week']||r['week']||Object.values(r)[0];
-    return{date:new Date(wk),dateStr:wk,
-      none:+(r['None']||r['none']||0),
-      d0d4:+(r['D0-D4']||0),d1d4:+(r['D1-D4']||0),
-      d2d4:+(r['D2-D4']||0),d3d4:+(r['D3-D4']||0),d4:+(r['D4']||0)};
-  }).filter(r=>!isNaN(r.date.getTime())).sort((a,b)=>a.date-b.date);
-}
+/* FILE UPLOAD REMOVED — data now loaded via API / GitHub repo CSV */
 
 /* ═══════════════════════════════════════════════════
    SEASONALITY / STATS HELPERS
