@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drought Analytics — Geographic Intelligence</title>
+<title>Drought Analytics — Geographic Monitor</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -297,7 +297,7 @@ tr.sec-break td{border-top:2px solid var(--border);padding-top:9px;}
 <div class="hdr">
   <div style="display:flex;align-items:center">
     <div class="logo">DROUGHT INTEL</div>
-    <div class="htag">GEOGRAPHIC DROUGHT MONITOR · USDM LIVE DATA</div>
+    <div class="htag">GEOGRAPHIC DROUGHT MONITOR · U.S. COVERAGE</div>
   </div>
   <div class="hright">
     <div class="liveb"><div class="ldot"></div>LIVE</div>
@@ -305,8 +305,7 @@ tr.sec-break td{border-top:2px solid var(--border);padding-top:9px;}
   </div>
 </div>
 
-<!-- SELECTOR BAR -->
-<div class="ubar" id="selectorBar">
+<div class="ubar">
   <span class="lbl">Area Type</span>
   <select class="cinput" id="areaTypeSelect" onchange="onAreaTypeChange()" style="min-width:190px">
     <option value="national">National</option>
@@ -327,343 +326,173 @@ tr.sec-break td{border-top:2px solid var(--border);padding-top:9px;}
   </select>
 
   <span class="lbl">Area</span>
-  <select class="cinput" id="areaSelect" onchange="onAreaChange()" style="min-width:230px">
-    <option value="">Loading...</option>
-  </select>
+  <select class="cinput" id="areaSelect" onchange="onAreaChange()" style="min-width:230px"></select>
 
-  <!-- county sub-picker (shown only for county data) -->
-  <span class="lbl" id="countyLbl" style="display:none">County</span>
-  <select class="cinput" id="countySelect" onchange="onCountyChange()"
-          style="display:none;min-width:200px">
-    <option value="">— All counties —</option>
-  </select>
+  <span class="lbl" id="subLbl" style="display:none">Sub-area</span>
+  <select class="cinput" id="subSelect" onchange="onSubChange()" style="display:none;min-width:220px"></select>
 
-  <div id="loadStatus" style="font-size:11px;color:var(--amber);display:none">
-    <span id="loadStatusText">Loading…</span>
-  </div>
-
-  <button class="btn-print" onclick="loadData()" style="background:var(--amber);padding:6px 16px;font-size:10px">▶ Load Data</button>
-
-  <!-- repo URL (always visible — leave empty to use live API) -->
-  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-    <span class="lbl" style="white-space:nowrap">GitHub data URL</span>
-    <input class="cinput" id="repoBase" type="text"
-           placeholder="Paste your raw GitHub URL here — leave empty to use live API"
-           style="flex:1;min-width:260px;max-width:520px"
-           onchange="onAreaChange()">
-  </div>
+  <span id="statusBar" style="font-size:10px;color:var(--amber);margin-left:8px"></span>
 </div>
 
 <div class="main" id="mainArea">
   <div class="empty" id="emptyState">
-    <div style="font-size:40px;opacity:.3">🌵</div>
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Ready</div>
-    <div style="font-size:10px;color:var(--text-dim)">Select an area type and area above, then click Load Data</div>
+    <div style="font-size:36px;opacity:.3">🌵</div>
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">READY</div>
+    <div style="font-size:10px;color:var(--text-dim)">Select an area type and area above</div>
   </div>
   <div id="dash" style="display:none"></div>
 </div>
 
-
 <script>
-/* ══════════════════════════════════════════════════════
-   AREA DEFINITIONS
-══════════════════════════════════════════════════════ */
-const STATE_FIPS = {
-  AL:'01',AK:'02',AZ:'04',AR:'05',CA:'06',CO:'08',CT:'09',DE:'10',FL:'12',GA:'13',
-  HI:'15',ID:'16',IL:'17',IN:'18',IA:'19',KS:'20',KY:'21',LA:'22',ME:'23',MD:'24',
-  MA:'25',MI:'26',MN:'27',MS:'28',MO:'29',MT:'30',NE:'31',NV:'32',NH:'33',NJ:'34',
-  NM:'35',NY:'36',NC:'37',ND:'38',OH:'39',OK:'40',OR:'41',PA:'42',RI:'44',SC:'45',
-  SD:'46',TN:'47',TX:'48',UT:'49',VT:'50',VA:'51',WA:'53',WV:'54',WI:'55',WY:'56',
-};
-const FIPS_ABBR = Object.fromEntries(Object.entries(STATE_FIPS).map(([a,f])=>[f,a]));
+const REPO = 'https://raw.githubusercontent.com/malli27at1-svg/drought-monitor/main/data';
 
 const AREA_DEFS = {
-  national:       { label:'National', items:{ us:'United States', conus:'CONUS' }, multi:false },
-  state:          { label:'State',    items:Object.fromEntries(Object.entries(STATE_FIPS).map(([a,f])=>[f,a])), multi:false },
-  county:         { label:'County',   items:Object.fromEntries(Object.entries(STATE_FIPS).map(([a])=>[a,a+' Counties'])), multi:true },
-  climate_div:    { label:'Climate Division', items:{ us:'All Climate Divisions' }, multi:true },
-  fema:           { label:'FEMA Region', items:{1:'Region 1 (NE)',2:'Region 2 (NY/NJ)',3:'Region 3 (Mid-Atl)',4:'Region 4 (SE)',5:'Region 5 (Midwest)',6:'Region 6 (S.Plains)',7:'Region 7 (IA/KS/MO/NE)',8:'Region 8 (Rockies)',9:'Region 9 (Pacific)',10:'Region 10 (NW)'}, multi:false },
-  nws_region:     { label:'NWS Region', items:{ CR:'Central',ER:'Eastern',PR:'Pacific',SR:'Southern',WR:'Western',AR:'Alaska',BR:'Boulder' }, multi:false },
-  rfc:            { label:'River Forecast Center', items:{ ABRFC:'Arkansas-Red Basin',CBRFC:'Colorado Basin',CNRFC:'California-Nevada',LMRFC:'Lower Mississippi',MBRFC:'Missouri Basin',MARFC:'Middle Atlantic',NCRFC:'North Central',NERFC:'Northeast',NWRFC:'Northwest',OHRFC:'Ohio',SERFC:'Southeast',WGRFC:'West Gulf' }, multi:false },
-  huc2:           { label:'HUC 2-digit', items:{ '01':'New England','02':'Mid Atlantic','03':'S. Atlantic-Gulf','04':'Great Lakes','05':'Ohio','06':'Tennessee','07':'Upper Mississippi','08':'Lower Mississippi','09':'Souris-Red-Rainy','10':'Missouri','11':'AR-White-Red','12':'Texas-Gulf','13':'Rio Grande','14':'Upper Colorado','15':'Lower Colorado','16':'Great Basin','17':'Pacific NW','18':'California' }, multi:false },
-  usace_district: { label:'USACE District', items:{ SWF:'Fort Worth',SWT:'Tulsa',SPK:'Sacramento',SPA:'Albuquerque',SPL:'Los Angeles',SPN:'San Francisco',NAB:'Baltimore',NAN:'New York',NAO:'Norfolk',NAP:'Philadelphia',LRB:'Buffalo',LRC:'Chicago',LRH:'Huntington',LRL:'Louisville',LRN:'Nashville',LRP:'Pittsburgh',MVK:'Vicksburg',MVM:'Memphis',MVN:'New Orleans',MVR:'Rock Island',MVS:'St. Louis',NWK:'Kansas City',NWO:'Omaha',NWP:'Portland OR',NWS:'Seattle',NWW:'Walla Walla',POA:'Alaska',SAD:'Savannah',SAJ:'Jacksonville',SAM:'Mobile',SAW:'Wilmington',SWG:'Galveston',SWL:'Little Rock' }, multi:false },
-  usace_division: { label:'USACE Division', items:{ LRD:'Great Lakes & Ohio',MVD:'Mississippi Valley',NAD:'North Atlantic',NWD:'Northwestern',POD:'Pacific Ocean',SAD:'South Atlantic',SWD:'Southwestern' }, multi:false },
-  climate_hub:    { label:'USDA Climate Hub', items:{ 1:'Northeast',2:'Southeast',3:'Midwest',4:'Southern Plains & Gulf',5:'Northern Plains',6:'Southwest',7:'Northwest' }, multi:false },
-  rdews:          { label:'Drought Early Warning System', items:{ 1:'Missouri Basin',2:'Upper Colorado RB',3:'California-Nevada',4:'North Central',5:'Southern Plains',6:'Southeast',7:'Intermountain West',8:'Peninsula Florida',9:'Northeast',10:'Pacific Islands' }, multi:false },
-  rcc:            { label:'Regional Climate Center', items:{ 1:'High Plains',2:'Midwest',3:'Northeast',4:'Southern',5:'Southeast',6:'Western' }, multi:false },
-  tribal:         { label:'Tribal Areas', items:{ us:'All Tribal Areas' }, multi:true },
-  urban:          { label:'Urban Areas', items:{ us:'All Urban Areas' }, multi:true },
+  national:       { multi:false, items:{ us:'United States', conus:'CONUS' } },
+  state:          { multi:false, items:{ AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming' } },
+  county:         { multi:true,  items:{ AL:'Alabama Counties',AK:'Alaska Counties',AZ:'Arizona Counties',AR:'Arkansas Counties',CA:'California Counties',CO:'Colorado Counties',CT:'Connecticut Counties',DE:'Delaware Counties',FL:'Florida Counties',GA:'Georgia Counties',HI:'Hawaii Counties',ID:'Idaho Counties',IL:'Illinois Counties',IN:'Indiana Counties',IA:'Iowa Counties',KS:'Kansas Counties',KY:'Kentucky Counties',LA:'Louisiana Counties',ME:'Maine Counties',MD:'Maryland Counties',MA:'Massachusetts Counties',MI:'Michigan Counties',MN:'Minnesota Counties',MS:'Mississippi Counties',MO:'Missouri Counties',MT:'Montana Counties',NE:'Nebraska Counties',NV:'Nevada Counties',NH:'New Hampshire Counties',NJ:'New Jersey Counties',NM:'New Mexico Counties',NY:'New York Counties',NC:'North Carolina Counties',ND:'North Dakota Counties',OH:'Ohio Counties',OK:'Oklahoma Counties',OR:'Oregon Counties',PA:'Pennsylvania Counties',RI:'Rhode Island Counties',SC:'South Carolina Counties',SD:'South Dakota Counties',TN:'Tennessee Counties',TX:'Texas Counties',UT:'Utah Counties',VT:'Vermont Counties',VA:'Virginia Counties',WA:'Washington Counties',WV:'West Virginia Counties',WI:'Wisconsin Counties',WY:'Wyoming Counties' } },
+  climate_div:    { multi:true,  items:{ us:'All Climate Divisions' } },
+  fema:           { multi:false, items:{ '1':'Region 1 — New England','2':'Region 2 — NY/NJ/PR','3':'Region 3 — Mid-Atlantic','4':'Region 4 — Southeast','5':'Region 5 — Midwest','6':'Region 6 — South Central','7':'Region 7 — Plains','8':'Region 8 — Mountain','9':'Region 9 — Pacific','10':'Region 10 — Northwest' } },
+  nws_region:     { multi:false, items:{ CR:'Central',ER:'Eastern',PR:'Pacific',SR:'Southern',WR:'Western',AR:'Alaska',BR:'Boulder' } },
+  rfc:            { multi:false, items:{ ABRFC:'Arkansas-Red Basin',CBRFC:'Colorado Basin',CNRFC:'California-Nevada',LMRFC:'Lower Mississippi',MBRFC:'Missouri Basin',MARFC:'Middle Atlantic',NCRFC:'North Central',NERFC:'Northeast',NWRFC:'Northwest',OHRFC:'Ohio',SERFC:'Southeast',WGRFC:'West Gulf' } },
+  huc2:           { multi:false, items:{ '01':'New England','02':'Mid Atlantic','03':'South Atlantic-Gulf','04':'Great Lakes','05':'Ohio','06':'Tennessee','07':'Upper Mississippi','08':'Lower Mississippi','09':'Souris-Red-Rainy','10':'Missouri','11':'Arkansas-White-Red','12':'Texas-Gulf','13':'Rio Grande','14':'Upper Colorado','15':'Lower Colorado','16':'Great Basin','17':'Pacific Northwest','18':'California' } },
+  usace_district: { multi:false, items:{ SWF:'Fort Worth',SWT:'Tulsa',SPK:'Sacramento',SPA:'Albuquerque',SPL:'Los Angeles',SPN:'San Francisco',NAB:'Baltimore',NAN:'New York',NAO:'Norfolk',NAP:'Philadelphia',LRB:'Buffalo',LRC:'Chicago',LRH:'Huntington',LRL:'Louisville',LRN:'Nashville',LRP:'Pittsburgh',MVK:'Vicksburg',MVM:'Memphis',MVN:'New Orleans',MVR:'Rock Island',MVS:'St. Louis',NWK:'Kansas City',NWO:'Omaha',NWP:'Portland OR',NWS:'Seattle',NWW:'Walla Walla',POA:'Alaska',SAD:'Savannah',SAJ:'Jacksonville',SAM:'Mobile',SAW:'Wilmington',SWG:'Galveston',SWL:'Little Rock' } },
+  usace_division: { multi:false, items:{ LRD:'Great Lakes & Ohio',MVD:'Mississippi Valley',NAD:'North Atlantic',NWD:'Northwestern',POD:'Pacific Ocean',SAD:'South Atlantic',SWD:'Southwestern' } },
+  climate_hub:    { multi:false, items:{ '1':'Northeast','2':'Southeast','3':'Midwest','4':'Southern Plains & Gulf Coast','5':'Northern Plains','6':'Southwest','7':'Northwest' } },
+  rdews:          { multi:false, items:{ '1':'Missouri Basin','2':'Upper Colorado RB','3':'California-Nevada','4':'North Central','5':'Southern Plains','6':'Southeast','7':'Intermountain West','8':'Peninsula Florida','9':'Northeast','10':'Pacific Islands' } },
+  rcc:            { multi:false, items:{ '1':'High Plains','2':'Midwest','3':'Northeast','4':'Southern','5':'Southeast','6':'Western' } },
+  tribal:         { multi:true,  items:{ us:'All Tribal Areas' } },
+  urban:          { multi:true,  items:{ us:'All Urban Areas' } },
 };
 
-const API_MAP = {
-  national:'USStatistics', state:'StateStatistics', county:'CountyStatistics',
-  climate_div:'ClimateDivisionStatistics', fema:'FEMARegionStatistics',
-  nws_region:'NWSRegionStatistics', rfc:'RiverForecastCenterStatistics',
-  huc2:'HUCStatistics', usace_district:'USACEDistrictStatistics',
-  usace_division:'USACEDivisionStatistics', climate_hub:'ClimateHubStatistics',
-  rdews:'RegionalDroughtEarlyWarningSystemStatistics',
-  rcc:'RegionalClimateCenterStatistics', tribal:'TribalStatistics', urban:'UrbanAreaStatistics',
-};
+let CUR_TYPE = 'national', CUR_KEY = 'us', CUR_SUB = '';
+const CSV_CACHE = {};
 
-const BASE_API = 'https://usdmdataservices.unl.edu/api';
-const START    = '1/1/2000';
+function setStatus(msg, err) {
+  const el = document.getElementById('statusBar');
+  el.textContent = msg;
+  el.style.color = err ? '#e74c3c' : 'var(--amber)';
+}
 
-let CURRENT_AREA_TYPE = 'national';
-let CURRENT_AOI       = 'us';
-let CURRENT_COUNTY    = '';
-
-/* ══════════════════════════════════════════════════════
-   SELECTOR LOGIC
-══════════════════════════════════════════════════════ */
-function onSourceChange(){}
-
-function onAreaTypeChange(){
-  CURRENT_AREA_TYPE = document.getElementById('areaTypeSelect').value;
-  const def = AREA_DEFS[CURRENT_AREA_TYPE];
+function onAreaTypeChange() {
+  CUR_TYPE = document.getElementById('areaTypeSelect').value;
   const sel = document.getElementById('areaSelect');
-  sel.innerHTML = Object.entries(def.items)
-    .map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
-  CURRENT_AOI    = sel.value;
-  CURRENT_COUNTY = '';
-  document.getElementById('countyLbl').style.display    = 'none';
-  document.getElementById('countySelect').style.display = 'none';
-  document.getElementById('loadStatus').style.display   = 'none';
+  sel.innerHTML = Object.entries(AREA_DEFS[CUR_TYPE].items)
+    .map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  CUR_KEY = sel.value;
+  CUR_SUB = '';
+  document.getElementById('subLbl').style.display = 'none';
+  document.getElementById('subSelect').style.display = 'none';
+  loadCSV();
 }
 
-function onAreaChange(){
-  CURRENT_AOI    = document.getElementById('areaSelect').value;
-  CURRENT_COUNTY = '';
-  document.getElementById('countyLbl').style.display    = 'none';
-  document.getElementById('countySelect').style.display = 'none';
-  document.getElementById('loadStatus').style.display   = 'none';
+function onAreaChange() {
+  CUR_KEY = document.getElementById('areaSelect').value;
+  CUR_SUB = '';
+  document.getElementById('subLbl').style.display = 'none';
+  document.getElementById('subSelect').style.display = 'none';
+  loadCSV();
 }
 
-function onCountyChange(){
-  CURRENT_COUNTY = document.getElementById('countySelect').value;
-  if(window._rawMultiData) filterAndRender(window._rawMultiData);
+function onSubChange() {
+  CUR_SUB = document.getElementById('subSelect').value;
+  if (window._cachedRows) renderForSub(window._cachedRows);
 }
 
-function setStatus(msg, ok=true){
-  const el = document.getElementById('loadStatus');
-  el.style.display = 'block';
-  el.style.color   = ok ? 'var(--amber)' : '#e74c3c';
-  document.getElementById('loadStatusText').textContent = msg;
-}
-
-/* ══════════════════════════════════════════════════════
-   DATA LOADING
-══════════════════════════════════════════════════════ */
-async function loadData(){
-  const def    = AREA_DEFS[CURRENT_AREA_TYPE];
-  const label  = def.items[CURRENT_AOI] || CURRENT_AOI;
-  const repoUrl = document.getElementById('repoBase').value.trim();
-  const source  = repoUrl ? 'repo' : 'api';
-
+async function loadCSV() {
+  const url = `${REPO}/${CUR_TYPE}/${CUR_KEY}.csv`;
+  const label = AREA_DEFS[CUR_TYPE].items[CUR_KEY] || CUR_KEY;
   document.getElementById('dash').style.display = 'none';
   document.getElementById('emptyState').style.display = 'flex';
   document.getElementById('emptyState').innerHTML = `
-    <div style="font-size:28px;opacity:.5">⧗</div>
+    <div style="font-size:28px;opacity:.4">⧗</div>
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Loading ${label}…</div>
-    <div style="font-size:10px;color:var(--text-dim)">Fetching from ${source === 'api' ? 'USDM live API' : 'GitHub repo'}…</div>`;
-  setStatus(`Loading ${label}…`);
-
+    <div style="font-size:10px;color:var(--text-dim)">Fetching from GitHub repo</div>`;
+  setStatus('Loading…', false);
   try {
     let rows;
-    if(source === 'api'){
-      rows = await fetchFromAPI();
+    if (CSV_CACHE[url]) {
+      rows = CSV_CACHE[url];
     } else {
-      rows = await fetchFromRepo();
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`HTTP ${r.status} — file not found at ${url}`);
+      rows = parseCSV(await r.text());
+      CSV_CACHE[url] = rows;
     }
-
-    if(!rows || rows.length === 0){
-      throw new Error('No data returned');
-    }
-
-    if(def.multi){
-      window._rawMultiData = rows;
-      populateCountyPicker(rows);
-      filterAndRender(rows);
+    if (!rows.length) throw new Error('CSV returned empty');
+    if (AREA_DEFS[CUR_TYPE].multi) {
+      window._cachedRows = rows;
+      const areas = [...new Set(rows.map(r => r.Area).filter(Boolean))].sort();
+      const subSel = document.getElementById('subSelect');
+      subSel.innerHTML = areas.map(a => `<option value="${a}">${a}</option>`).join('');
+      document.getElementById('subLbl').style.display = '';
+      subSel.style.display = '';
+      CUR_SUB = areas[0];
+      subSel.value = CUR_SUB;
+      renderForSub(rows);
     } else {
-      window._rawMultiData = null;
+      window._cachedRows = null;
       const parsed = parseRows(rows);
-      if(!parsed.length) throw new Error('Parse failed — check field names');
-      window._locName = label;
-      setStatus(`${label} · ${parsed.length} weeks`, true);
-      document.getElementById('emptyState').style.display = 'none';
+      if (!parsed.length) throw new Error('No valid rows after parsing');
+      window._locLabel = label;
+      setStatus(`${label} · ${parsed.length} weeks`, false);
       render(parsed);
     }
-  } catch(e){
-    setStatus(`Error: ${e.message}`, false);
-    document.getElementById('emptyState').style.display = 'flex';
+  } catch(e) {
+    setStatus('Error: ' + e.message, true);
     document.getElementById('dash').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
     document.getElementById('emptyState').innerHTML = `
-      <div style="font-size:28px;opacity:.5">⚠</div>
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c">Failed to load data</div>
-      <div style="font-size:11px;color:var(--text-dim);max-width:500px;text-align:center;line-height:1.8;margin-top:8px">
-        <strong style="color:#e74c3c">${e.message}</strong><br><br>
-        If using Live API: the USDM API may be temporarily down, or your browser may be blocking cross-origin requests.<br>
-        Try opening the page from a web server (GitHub Pages) rather than a local file.<br><br>
-        If using GitHub repo CSV: check that the URL is correct and the data/ folder exists in your repo.
+      <div style="font-size:28px;opacity:.4">⚠</div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c">Failed to load</div>
+      <div style="font-size:11px;color:var(--text-dim);max-width:500px;text-align:center;line-height:1.9;margin-top:8px">
+        ${e.message}<br><br>Expected file:<br>
+        <span style="color:var(--amber)">${url}</span>
       </div>`;
   }
 }
 
-async function fetchFromAPI(){
-  const apiCode  = API_MAP[CURRENT_AREA_TYPE];
-  const today    = new Date().toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'});
-  const hucParam = CURRENT_AREA_TYPE === 'huc2' ? '&hucLevel=2' : '';
-  // county: aoi = state abbreviation
-  const aoi      = CURRENT_AREA_TYPE === 'county' ? CURRENT_AOI : CURRENT_AOI;
-  const url      = `${BASE_API}/${apiCode}/GetDroughtSeverityStatisticsByAreaPercent?aoi=${aoi}&startdate=${START}&enddate=${today}&statisticsType=1${hucParam}`;
-  const r        = await fetch(url, {headers:{Accept:'application/json'}});
-  if(!r.ok) throw new Error(`API error HTTP ${r.status}`);
-  return r.json();
+function renderForSub(rows) {
+  const sub = CUR_SUB;
+  const areaLabel = AREA_DEFS[CUR_TYPE].items[CUR_KEY] || CUR_KEY;
+  const filtered = rows.filter(r => r.Area === sub);
+  const parsed = parseRows(filtered);
+  if (!parsed.length) { setStatus('No data for ' + sub, true); return; }
+  window._locLabel = areaLabel + ' — ' + sub;
+  setStatus(window._locLabel + ' · ' + parsed.length + ' weeks', false);
+  render(parsed);
 }
 
-async function fetchFromRepo(){
-  const repoBase = document.getElementById('repoBase').value.trim().replace(/\/$/, '');
-  if(!repoBase) throw new Error('Enter your GitHub raw URL in the data source field');
-  // Map area type + aoi to filename
-  const filename = CURRENT_AREA_TYPE === 'county'
-    ? `${CURRENT_AREA_TYPE}/${CURRENT_AOI}.csv`
-    : CURRENT_AREA_TYPE === 'state'
-      ? `state/${Object.entries(STATE_FIPS).find(([a,f])=>f===CURRENT_AOI)?.[0] || CURRENT_AOI}.csv`
-      : `${CURRENT_AREA_TYPE}/${CURRENT_AOI}.csv`;
-  const url = `${repoBase}/${filename}`;
-  const r   = await fetch(url);
-  if(!r.ok) throw new Error(`Repo CSV not found: ${url}`);
-  const text = await r.text();
-  // Parse CSV to array of objects
+function parseCSV(text) {
   const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h=>h.trim());
-  return lines.slice(1).map(line=>{
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim());
+  return lines.slice(1).filter(l => l.trim()).map(line => {
     const vals = line.split(',');
-    return Object.fromEntries(headers.map((h,i)=>[h, vals[i]?.trim()]));
+    return Object.fromEntries(headers.map((h, i) => [h, (vals[i] || '').trim()]));
   });
 }
 
-function populateCountyPicker(rows){
-  const areaCol = findAreaCol(rows[0]);
-  if(!areaCol) return;
-  const areas = [...new Set(rows.map(r=>r[areaCol]))].sort();
-  const sel = document.getElementById('countySelect');
-  sel.innerHTML = '<option value="">— All (show latest week) —</option>' +
-    areas.map(a=>`<option value="${a}">${a}</option>`).join('');
-  document.getElementById('countyLbl').style.display    = '';
-  document.getElementById('countySelect').style.display = '';
-}
-
-function findAreaCol(row){
-  if(!row) return null;
-  const keys = Object.keys(row).map(k=>k.toLowerCase());
-  const idx  = keys.findIndex(k=>['area','name','county','areaofinterest','stateabbreviation'].includes(k));
-  return idx >= 0 ? Object.keys(row)[idx] : null;
-}
-
-function filterAndRender(rows){
-  const areaCol = findAreaCol(rows[0]);
-  const county  = document.getElementById('countySelect').value;
-  const def     = AREA_DEFS[CURRENT_AREA_TYPE];
-  const label   = def.items[CURRENT_AOI] || CURRENT_AOI;
-
-  if(county && areaCol){
-    // Single county selected → full time series analytics
-    const filtered = rows.filter(r=>r[areaCol]===county);
-    const parsed   = parseRows(filtered);
-    window._locName = county;
-    setStatus(`${label} · ${county} · ${parsed.length} weeks`, true);
-    document.getElementById('emptyState').style.display = 'none';
-    render(parsed);
-  } else {
-    // No county selected → show latest-week table across all areas
-    showMultiAreaTable(rows, areaCol, label);
-  }
-}
-
-function parseRows(rows){
-  return rows.map(r=>{
-    const dateStr = r['mapDate']||r['MapDate']||r['Week']||r['week']||Object.values(r)[0];
-    const d = new Date(dateStr);
-    if(isNaN(d)) return null;
-    const n  = k => parseFloat(r[k]||r[k.toLowerCase()]||0)||0;
+function parseRows(rows) {
+  return rows.map(r => {
+    const d = new Date(r.Week);
+    if (isNaN(d)) return null;
+    const f = k => parseFloat(r[k]) || 0;
     return {
-      date:    d,
-      dateStr: d.toISOString().slice(0,10),
-      none:    Math.round(n('none')*10)/10,
-      d0d4:    Math.round(n('d0')*10)/10,   // API statisticsType=1: d0=D0-D4 cumulative
-      d1d4:    Math.round(n('d1')*10)/10,
-      d2d4:    Math.round(n('d2')*10)/10,
-      d3d4:    Math.round(n('d3')*10)/10,
-      d4:      Math.round(n('d4')*10)/10,
+      date: d, dateStr: r.Week,
+      none: f('None'),
+      d0d4: f('D0-D4'), d1d4: f('D1-D4'),
+      d2d4: f('D2-D4'), d3d4: f('D3-D4'), d4: f('D4'),
     };
-  }).filter(Boolean).sort((a,b)=>a.date-b.date);
+  }).filter(Boolean).sort((a, b) => a.date - b.date);
 }
 
-function showMultiAreaTable(rows, areaCol, label){
-  // Find latest week
-  const allDates = rows.map(r=>r['mapDate']||r['MapDate']||r['Week']||r['week']||'').filter(Boolean).sort();
-  const latestDate = allDates[allDates.length-1];
-  const latest = rows.filter(r=>(r['mapDate']||r['MapDate']||r['Week']||r['week']||'')===latestDate);
-
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('dash').style.display = 'block';
-  setStatus(`${label} · ${latest.length} areas · latest: ${latestDate}`, true);
-
-  const def = AREA_DEFS[CURRENT_AREA_TYPE];
-  const selLabel = def.items[CURRENT_AOI] || CURRENT_AOI;
-  window._locName = selLabel;
-
-  Object.values(CH).forEach(c=>c.destroy()); CH={};
-
-  const dash = document.getElementById('dash');
-  const hcol = v=>{
-    if(v<20)return'#3a7d44';if(v<40)return'#8db83b';if(v<60)return'#f1c40f';
-    if(v<75)return'#e8a020';if(v<88)return'#c0602b';return'#c0392b';
-  };
-  const n = (r,k)=>parseFloat(r[k]||r[k.toLowerCase()]||0)||0;
-
-  const rows_html = latest.map(r=>{
-    const area = areaCol ? r[areaCol] : '';
-    const d0=n(r,'d0'),d1=n(r,'d1'),d2=n(r,'d2'),d3=n(r,'d3'),d4=n(r,'d4');
-    const cv = v=>`<td class="hc" style="color:${hcol(v)};-webkit-print-color-adjust:exact">${v.toFixed(1)}%</td>`;
-    return `<tr style="cursor:pointer" onclick="selectSubArea('${area.replace(/'/g,"\\'")}')">
-      <td style="color:var(--amber)">${area}</td>${cv(d0)}${cv(d1)}${cv(d2)}${cv(d3)}${cv(d4)}
-    </tr>`;
-  }).join('');
-
-  dash.innerHTML = `
-    <div class="sh" style="margin-top:2px">
-      <div class="st">${selLabel.toUpperCase()}</div>
-      <div class="ss">All sub-areas · Latest week: ${latestDate} · Click a row for full time-series</div>
-    </div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th style="text-align:left">Area</th><th>D0-D4</th><th>D1-D4</th><th>D2-D4</th><th>D3-D4</th><th>D4</th></tr></thead>
-      <tbody>${rows_html}</tbody>
-    </table></div>
-    <div style="font-size:10px;color:var(--text-dim);margin-top:8px">
-      ↑ Click any row to view full time-series analytics for that area
-    </div>`;
-}
-
-function selectSubArea(areaName){
-  const sel = document.getElementById('countySelect');
-  sel.value = areaName;
-  onCountyChange();
-}
-
-/* ══════════════════════════════════════════════════════
-   INITIALISE
-══════════════════════════════════════════════════════ */
-window.addEventListener('DOMContentLoaded', ()=>{
-  onAreaTypeChange();  // populates dropdowns only — no data fetch until user clicks Load Data
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('areaTypeSelect').value = 'national';
+  onAreaTypeChange();
 });
-
 </script>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   CONSTANTS
-═══════════════════════════════════════════════════ */
 let GD=[], CH={}, ANA_YRS={};
 
 const FIELDS=[
@@ -710,8 +539,6 @@ Chart.defaults.color='#555e72';
 Chart.defaults.borderColor='#1e2330';
 Chart.defaults.font.family="'IBM Plex Mono',monospace";
 Chart.defaults.font.size=9;
-
-/* FILE UPLOAD REMOVED — data now loaded via API / GitHub repo CSV */
 
 /* ═══════════════════════════════════════════════════
    SEASONALITY / STATS HELPERS
@@ -770,7 +597,7 @@ function render(data){
   dash.style.display='block';
   Object.values(CH).forEach(c=>c.destroy());CH={};ANA_YRS={};
 
-  const com=window._locName||'United States';
+  const com=window._locLabel||'United States';
   const n=data.length,lat=data[n-1],prv=data[n-2];
   const allYrs=[...new Set(data.map(d=>d.date.getFullYear()))].sort((a,b)=>b-a);
   const curYr=lat.date.getFullYear();
@@ -1168,7 +995,7 @@ function commentary(data,com,curYr){
     <p>As of <span class="hl">${cur.dateStr}</span>, conditions are classified <span class="hl">${sev}</span> with <span class="hl">${cur.d0d4.toFixed(1)}%</span> of ${com} under drought stress. Over the trailing four weeks, coverage has ${tStr} and is ${yoyStr}.</p>
     <p>Severe-to-exceptional drought (D2–D4) covers <span class="hl">${cur.d2d4.toFixed(1)}%</span>; extreme drought (D3–D4) at <span class="hl">${cur.d3d4.toFixed(1)}%</span>. ${d4n}</p>
     <p>Versus the ${sy}–${ey} long-run average of <span class="hl">${hAvg.toFixed(1)}%</span>, current D0–D4 is ${avgStr} the mean. Record: <span class="al">${mxD0.toFixed(1)}%</span> (D0–D4), <span class="al">${mxD3.toFixed(1)}%</span> (D3–D4). The closest historical analogs by annual D0–D4 level are <span class="hl">${anaYrs.join(', ')}</span> — their seasonal trajectories from this point in the year provide the most relevant historical precedent for the near-term outlook.</p>
-    <p style="color:var(--text-dim);font-size:11px;border-top:1px solid var(--border);padding-top:8px;margin-top:4px">⚠ Auto-generated from USDA Drought Monitor data. Cross-reference with crop condition reports and precipitation anomalies before decisions. Up to one-week data lag applies.</p>
+    <p style="color:var(--text-dim);font-size:11px;border-top:1px solid var(--border);padding-top:8px;margin-top:4px">⚠ Auto-generated from USDA Drought Monitor data. Cross-reference with crop condition reports and precipitation anomalies before trading decisions. Up to one-week data lag applies.</p>
   </div></div>`;
 }
 </script>
@@ -1201,33 +1028,7 @@ window.addEventListener('afterprint', ()=>{
     c.update('none');
   });
 });
-</script>
 
-<script>
-window.addEventListener('beforeprint', ()=>{
-  Chart.defaults.color = '#333';
-  Chart.defaults.borderColor = '#bbb';
-  Object.values(CH).forEach(c=>{
-    if(!c.options) return;
-    Object.values(c.options.scales||{}).forEach(ax=>{
-      if(ax.grid)  ax.grid.color  = '#ccc';
-      if(ax.ticks) ax.ticks.color = '#333';
-    });
-    c.update('none');
-  });
-});
-window.addEventListener('afterprint', ()=>{
-  Chart.defaults.color = '#555e72';
-  Chart.defaults.borderColor = '#1e2330';
-  Object.values(CH).forEach(c=>{
-    if(!c.options) return;
-    Object.values(c.options.scales||{}).forEach(ax=>{
-      if(ax.grid)  ax.grid.color  = '#1e2330';
-      if(ax.ticks) ax.ticks.color = '#555e72';
-    });
-    c.update('none');
-  });
-});
 </script>
 </body>
 </html>
