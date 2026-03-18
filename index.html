@@ -393,8 +393,9 @@ function onSubChange() {
 }
 
 async function loadCSV() {
-  const url = `${REPO}/${CUR_TYPE}/${CUR_KEY}.csv`;
+  const url   = `${REPO}/${CUR_TYPE}/${CUR_KEY}.csv`;
   const label = AREA_DEFS[CUR_TYPE].items[CUR_KEY] || CUR_KEY;
+
   document.getElementById('dash').style.display = 'none';
   document.getElementById('emptyState').style.display = 'flex';
   document.getElementById('emptyState').innerHTML = `
@@ -402,17 +403,20 @@ async function loadCSV() {
     <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber)">Loading ${label}…</div>
     <div style="font-size:10px;color:var(--text-dim)">Fetching from GitHub repo</div>`;
   setStatus('Loading…', false);
+
   try {
     let rows;
     if (CSV_CACHE[url]) {
       rows = CSV_CACHE[url];
     } else {
       const r = await fetch(url);
-      if (!r.ok) throw new Error(`HTTP ${r.status} — file not found at ${url}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status} — ${url}`);
       rows = parseCSV(await r.text());
       CSV_CACHE[url] = rows;
     }
-    if (!rows.length) throw new Error('CSV returned empty');
+
+    if (!rows.length) throw new Error('CSV is empty');
+
     if (AREA_DEFS[CUR_TYPE].multi) {
       window._cachedRows = rows;
       const areas = [...new Set(rows.map(r => r.Area).filter(Boolean))].sort();
@@ -439,8 +443,7 @@ async function loadCSV() {
       <div style="font-size:28px;opacity:.4">⚠</div>
       <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c">Failed to load</div>
       <div style="font-size:11px;color:var(--text-dim);max-width:500px;text-align:center;line-height:1.9;margin-top:8px">
-        ${e.message}<br><br>Expected file:<br>
-        <span style="color:var(--amber)">${url}</span>
+        ${e.message}<br><br>Expected: <span style="color:var(--amber)">${url}</span>
       </div>`;
   }
 }
@@ -481,6 +484,22 @@ function parseRows(rows) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Detect local file access (file://) — fetch() is blocked by browser in this mode
+  if (location.protocol === 'file:') {
+    document.getElementById('emptyState').innerHTML = `
+      <div style="font-size:28px;opacity:.5">⚠</div>
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#e74c3c;margin-bottom:12px">Open via GitHub Pages — not as a local file</div>
+      <div style="font-size:12px;color:var(--text-dim);max-width:520px;text-align:center;line-height:2">
+        You are opening this file directly from your desktop (<code style="color:var(--amber)">file://</code>).<br>
+        Browsers block data fetching when a page is opened this way.<br><br>
+        Open it through your GitHub Pages URL instead:<br>
+        <a href="https://malli27at1-svg.github.io/drought-monitor/"
+           style="color:var(--amber);font-size:13px;letter-spacing:1px">
+          https://malli27at1-svg.github.io/drought-monitor/
+        </a>
+      </div>`;
+    return;
+  }
   document.getElementById('areaTypeSelect').value = 'national';
   onAreaTypeChange();
 });
