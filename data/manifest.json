@@ -1,0 +1,1276 @@
+{
+  "generated": "2026-03-18T17:10:53.219095",
+  "start_date": "1/1/2000",
+  "end_date": "03/18/2026",
+  "areas": {
+    "national": {
+      "us": {
+        "label": "United States",
+        "file": "national/us.csv",
+        "multi": false,
+        "rows": 2734
+      },
+      "conus": {
+        "label": "CONUS",
+        "file": "national/conus.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "state": {
+      "AL": {
+        "label": "AL",
+        "file": "state/AL.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "AK": {
+        "label": "AK",
+        "file": "state/AK.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "AZ": {
+        "label": "AZ",
+        "file": "state/AZ.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "AR": {
+        "label": "AR",
+        "file": "state/AR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "CA": {
+        "label": "CA",
+        "file": "state/CA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "CO": {
+        "label": "CO",
+        "file": "state/CO.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "CT": {
+        "label": "CT",
+        "file": "state/CT.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "DE": {
+        "label": "DE",
+        "file": "state/DE.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "FL": {
+        "label": "FL",
+        "file": "state/FL.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "GA": {
+        "label": "GA",
+        "file": "state/GA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "HI": {
+        "label": "HI",
+        "file": "state/HI.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "ID": {
+        "label": "ID",
+        "file": "state/ID.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "IL": {
+        "label": "IL",
+        "file": "state/IL.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "IN": {
+        "label": "IN",
+        "file": "state/IN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "IA": {
+        "label": "IA",
+        "file": "state/IA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "KS": {
+        "label": "KS",
+        "file": "state/KS.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "KY": {
+        "label": "KY",
+        "file": "state/KY.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LA": {
+        "label": "LA",
+        "file": "state/LA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "ME": {
+        "label": "ME",
+        "file": "state/ME.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MD": {
+        "label": "MD",
+        "file": "state/MD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MA": {
+        "label": "MA",
+        "file": "state/MA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MI": {
+        "label": "MI",
+        "file": "state/MI.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MN": {
+        "label": "MN",
+        "file": "state/MN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MS": {
+        "label": "MS",
+        "file": "state/MS.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MO": {
+        "label": "MO",
+        "file": "state/MO.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MT": {
+        "label": "MT",
+        "file": "state/MT.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NE": {
+        "label": "NE",
+        "file": "state/NE.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NV": {
+        "label": "NV",
+        "file": "state/NV.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NH": {
+        "label": "NH",
+        "file": "state/NH.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NJ": {
+        "label": "NJ",
+        "file": "state/NJ.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NM": {
+        "label": "NM",
+        "file": "state/NM.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NY": {
+        "label": "NY",
+        "file": "state/NY.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NC": {
+        "label": "NC",
+        "file": "state/NC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "ND": {
+        "label": "ND",
+        "file": "state/ND.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "OH": {
+        "label": "OH",
+        "file": "state/OH.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "OK": {
+        "label": "OK",
+        "file": "state/OK.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "OR": {
+        "label": "OR",
+        "file": "state/OR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "PA": {
+        "label": "PA",
+        "file": "state/PA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "RI": {
+        "label": "RI",
+        "file": "state/RI.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SC": {
+        "label": "SC",
+        "file": "state/SC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SD": {
+        "label": "SD",
+        "file": "state/SD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "TN": {
+        "label": "TN",
+        "file": "state/TN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "TX": {
+        "label": "TX",
+        "file": "state/TX.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "UT": {
+        "label": "UT",
+        "file": "state/UT.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "VT": {
+        "label": "VT",
+        "file": "state/VT.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "VA": {
+        "label": "VA",
+        "file": "state/VA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WA": {
+        "label": "WA",
+        "file": "state/WA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WV": {
+        "label": "WV",
+        "file": "state/WV.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WI": {
+        "label": "WI",
+        "file": "state/WI.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WY": {
+        "label": "WY",
+        "file": "state/WY.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "county": {
+      "AL": {
+        "label": "AL",
+        "file": "county/AL.csv",
+        "multi": true,
+        "rows": 91589
+      },
+      "AK": {
+        "label": "AK",
+        "file": "county/AK.csv",
+        "multi": true,
+        "rows": 41010
+      },
+      "AZ": {
+        "label": "AZ",
+        "file": "county/AZ.csv",
+        "multi": true,
+        "rows": 20505
+      },
+      "AR": {
+        "label": "AR",
+        "file": "county/AR.csv",
+        "multi": true,
+        "rows": 102525
+      },
+      "CA": {
+        "label": "CA",
+        "file": "county/CA.csv",
+        "multi": true,
+        "rows": 79286
+      },
+      "CO": {
+        "label": "CO",
+        "file": "county/CO.csv",
+        "multi": true,
+        "rows": 87488
+      },
+      "CT": {
+        "label": "CT",
+        "file": "county/CT.csv",
+        "multi": true,
+        "rows": 12303
+      },
+      "DE": {
+        "label": "DE",
+        "file": "county/DE.csv",
+        "multi": true,
+        "rows": 4101
+      },
+      "FL": {
+        "label": "FL",
+        "file": "county/FL.csv",
+        "multi": true,
+        "rows": 91589
+      },
+      "GA": {
+        "label": "GA",
+        "file": "county/GA.csv",
+        "multi": true,
+        "rows": 217353
+      },
+      "HI": {
+        "label": "HI",
+        "file": "county/HI.csv",
+        "multi": true,
+        "rows": 6835
+      },
+      "ID": {
+        "label": "ID",
+        "file": "county/ID.csv",
+        "multi": true,
+        "rows": 60148
+      },
+      "IL": {
+        "label": "IL",
+        "file": "county/IL.csv",
+        "multi": true,
+        "rows": 139434
+      },
+      "IN": {
+        "label": "IN",
+        "file": "county/IN.csv",
+        "multi": true,
+        "rows": 125764
+      },
+      "IA": {
+        "label": "IA",
+        "file": "county/IA.csv",
+        "multi": true,
+        "rows": 135333
+      },
+      "KS": {
+        "label": "KS",
+        "file": "county/KS.csv",
+        "multi": true,
+        "rows": 143535
+      },
+      "KY": {
+        "label": "KY",
+        "file": "county/KY.csv",
+        "multi": true,
+        "rows": 164040
+      },
+      "LA": {
+        "label": "LA",
+        "file": "county/LA.csv",
+        "multi": true,
+        "rows": 87488
+      },
+      "ME": {
+        "label": "ME",
+        "file": "county/ME.csv",
+        "multi": true,
+        "rows": 21872
+      },
+      "MD": {
+        "label": "MD",
+        "file": "county/MD.csv",
+        "multi": true,
+        "rows": 32808
+      },
+      "MA": {
+        "label": "MA",
+        "file": "county/MA.csv",
+        "multi": true,
+        "rows": 19138
+      },
+      "MI": {
+        "label": "MI",
+        "file": "county/MI.csv",
+        "multi": true,
+        "rows": 113461
+      },
+      "MN": {
+        "label": "MN",
+        "file": "county/MN.csv",
+        "multi": true,
+        "rows": 118929
+      },
+      "MS": {
+        "label": "MS",
+        "file": "county/MS.csv",
+        "multi": true,
+        "rows": 112094
+      },
+      "MO": {
+        "label": "MO",
+        "file": "county/MO.csv",
+        "multi": true,
+        "rows": 157205
+      },
+      "MT": {
+        "label": "MT",
+        "file": "county/MT.csv",
+        "multi": true,
+        "rows": 76552
+      },
+      "NE": {
+        "label": "NE",
+        "file": "county/NE.csv",
+        "multi": true,
+        "rows": 127131
+      },
+      "NV": {
+        "label": "NV",
+        "file": "county/NV.csv",
+        "multi": true,
+        "rows": 23239
+      },
+      "NH": {
+        "label": "NH",
+        "file": "county/NH.csv",
+        "multi": true,
+        "rows": 13670
+      },
+      "NJ": {
+        "label": "NJ",
+        "file": "county/NJ.csv",
+        "multi": true,
+        "rows": 28707
+      },
+      "NM": {
+        "label": "NM",
+        "file": "county/NM.csv",
+        "multi": true,
+        "rows": 45111
+      },
+      "NY": {
+        "label": "NY",
+        "file": "county/NY.csv",
+        "multi": true,
+        "rows": 84754
+      },
+      "NC": {
+        "label": "NC",
+        "file": "county/NC.csv",
+        "multi": true,
+        "rows": 136700
+      },
+      "ND": {
+        "label": "ND",
+        "file": "county/ND.csv",
+        "multi": true,
+        "rows": 72451
+      },
+      "OH": {
+        "label": "OH",
+        "file": "county/OH.csv",
+        "multi": true,
+        "rows": 120296
+      },
+      "OK": {
+        "label": "OK",
+        "file": "county/OK.csv",
+        "multi": true,
+        "rows": 105259
+      },
+      "OR": {
+        "label": "OR",
+        "file": "county/OR.csv",
+        "multi": true,
+        "rows": 49212
+      },
+      "PA": {
+        "label": "PA",
+        "file": "county/PA.csv",
+        "multi": true,
+        "rows": 91589
+      },
+      "RI": {
+        "label": "RI",
+        "file": "county/RI.csv",
+        "multi": true,
+        "rows": 6835
+      },
+      "SC": {
+        "label": "SC",
+        "file": "county/SC.csv",
+        "multi": true,
+        "rows": 62882
+      },
+      "SD": {
+        "label": "SD",
+        "file": "county/SD.csv",
+        "multi": true,
+        "rows": 90222
+      },
+      "TN": {
+        "label": "TN",
+        "file": "county/TN.csv",
+        "multi": true,
+        "rows": 129865
+      },
+      "TX": {
+        "label": "TX",
+        "file": "county/TX.csv",
+        "multi": true,
+        "rows": 347218
+      },
+      "UT": {
+        "label": "UT",
+        "file": "county/UT.csv",
+        "multi": true,
+        "rows": 39643
+      },
+      "VT": {
+        "label": "VT",
+        "file": "county/VT.csv",
+        "multi": true,
+        "rows": 19138
+      },
+      "VA": {
+        "label": "VA",
+        "file": "county/VA.csv",
+        "multi": true,
+        "rows": 181811
+      },
+      "WA": {
+        "label": "WA",
+        "file": "county/WA.csv",
+        "multi": true,
+        "rows": 53313
+      },
+      "WV": {
+        "label": "WV",
+        "file": "county/WV.csv",
+        "multi": true,
+        "rows": 75185
+      },
+      "WI": {
+        "label": "WI",
+        "file": "county/WI.csv",
+        "multi": true,
+        "rows": 98424
+      },
+      "WY": {
+        "label": "WY",
+        "file": "county/WY.csv",
+        "multi": true,
+        "rows": 31441
+      }
+    },
+    "climate_div": {},
+    "fema": {
+      "1": {
+        "label": "Region 1",
+        "file": "fema/1.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "2": {
+        "label": "Region 2",
+        "file": "fema/2.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "3": {
+        "label": "Region 3",
+        "file": "fema/3.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "4": {
+        "label": "Region 4",
+        "file": "fema/4.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "5": {
+        "label": "Region 5",
+        "file": "fema/5.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "6": {
+        "label": "Region 6",
+        "file": "fema/6.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "7": {
+        "label": "Region 7",
+        "file": "fema/7.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "8": {
+        "label": "Region 8",
+        "file": "fema/8.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "9": {
+        "label": "Region 9",
+        "file": "fema/9.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "10": {
+        "label": "Region 10",
+        "file": "fema/10.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "nws_region": {
+      "CR": {
+        "label": "Central Region",
+        "file": "nws_region/CR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "ER": {
+        "label": "Eastern Region",
+        "file": "nws_region/ER.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "PR": {
+        "label": "Pacific Region",
+        "file": "nws_region/PR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SR": {
+        "label": "Southern Region",
+        "file": "nws_region/SR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WR": {
+        "label": "Western Region",
+        "file": "nws_region/WR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "AR": {
+        "label": "Alaska Region",
+        "file": "nws_region/AR.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "rfc": {
+      "ABRFC": {
+        "label": "Arkansas-Red Basin",
+        "file": "rfc/ABRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "CBRFC": {
+        "label": "Colorado Basin",
+        "file": "rfc/CBRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "CNRFC": {
+        "label": "California-Nevada",
+        "file": "rfc/CNRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LMRFC": {
+        "label": "Lower Mississippi",
+        "file": "rfc/LMRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MBRFC": {
+        "label": "Missouri Basin",
+        "file": "rfc/MBRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MARFC": {
+        "label": "Middle Atlantic",
+        "file": "rfc/MARFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NCRFC": {
+        "label": "North Central",
+        "file": "rfc/NCRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NERFC": {
+        "label": "Northeast",
+        "file": "rfc/NERFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWRFC": {
+        "label": "Northwest",
+        "file": "rfc/NWRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "OHRFC": {
+        "label": "Ohio",
+        "file": "rfc/OHRFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SERFC": {
+        "label": "Southeast",
+        "file": "rfc/SERFC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "WGRFC": {
+        "label": "West Gulf",
+        "file": "rfc/WGRFC.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "huc2": {
+      "01": {
+        "label": "New England",
+        "file": "huc2/01.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "02": {
+        "label": "Mid Atlantic",
+        "file": "huc2/02.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "03": {
+        "label": "South Atlantic-Gulf",
+        "file": "huc2/03.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "04": {
+        "label": "Great Lakes",
+        "file": "huc2/04.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "05": {
+        "label": "Ohio",
+        "file": "huc2/05.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "06": {
+        "label": "Tennessee",
+        "file": "huc2/06.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "07": {
+        "label": "Upper Mississippi",
+        "file": "huc2/07.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "08": {
+        "label": "Lower Mississippi",
+        "file": "huc2/08.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "09": {
+        "label": "Souris-Red-Rainy",
+        "file": "huc2/09.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "10": {
+        "label": "Missouri",
+        "file": "huc2/10.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "11": {
+        "label": "Arkansas-White-Red",
+        "file": "huc2/11.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "12": {
+        "label": "Texas-Gulf",
+        "file": "huc2/12.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "13": {
+        "label": "Rio Grande",
+        "file": "huc2/13.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "14": {
+        "label": "Upper Colorado",
+        "file": "huc2/14.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "15": {
+        "label": "Lower Colorado",
+        "file": "huc2/15.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "16": {
+        "label": "Great Basin",
+        "file": "huc2/16.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "17": {
+        "label": "Pacific Northwest",
+        "file": "huc2/17.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "18": {
+        "label": "California",
+        "file": "huc2/18.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "usace_district": {
+      "SWF": {
+        "label": "Fort Worth",
+        "file": "usace_district/SWF.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SWT": {
+        "label": "Tulsa",
+        "file": "usace_district/SWT.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SPK": {
+        "label": "Sacramento",
+        "file": "usace_district/SPK.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SPA": {
+        "label": "Albuquerque",
+        "file": "usace_district/SPA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SPL": {
+        "label": "Los Angeles",
+        "file": "usace_district/SPL.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SPN": {
+        "label": "San Francisco",
+        "file": "usace_district/SPN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAB": {
+        "label": "Baltimore",
+        "file": "usace_district/NAB.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAE": {
+        "label": "New England",
+        "file": "usace_district/NAE.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAN": {
+        "label": "New York",
+        "file": "usace_district/NAN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAO": {
+        "label": "Norfolk",
+        "file": "usace_district/NAO.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAP": {
+        "label": "Philadelphia",
+        "file": "usace_district/NAP.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRB": {
+        "label": "Buffalo",
+        "file": "usace_district/LRB.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRC": {
+        "label": "Chicago",
+        "file": "usace_district/LRC.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRE": {
+        "label": "Detroit",
+        "file": "usace_district/LRE.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRH": {
+        "label": "Huntington",
+        "file": "usace_district/LRH.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRL": {
+        "label": "Louisville",
+        "file": "usace_district/LRL.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRN": {
+        "label": "Nashville",
+        "file": "usace_district/LRN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "LRP": {
+        "label": "Pittsburgh",
+        "file": "usace_district/LRP.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVK": {
+        "label": "Vicksburg",
+        "file": "usace_district/MVK.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVM": {
+        "label": "Memphis",
+        "file": "usace_district/MVM.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVN": {
+        "label": "New Orleans",
+        "file": "usace_district/MVN.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVR": {
+        "label": "Rock Island",
+        "file": "usace_district/MVR.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVS": {
+        "label": "St. Louis",
+        "file": "usace_district/MVS.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWK": {
+        "label": "Kansas City",
+        "file": "usace_district/NWK.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWO": {
+        "label": "Omaha",
+        "file": "usace_district/NWO.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWP": {
+        "label": "Portland OR",
+        "file": "usace_district/NWP.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWS": {
+        "label": "Seattle",
+        "file": "usace_district/NWS.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWW": {
+        "label": "Walla Walla",
+        "file": "usace_district/NWW.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "POA": {
+        "label": "Alaska",
+        "file": "usace_district/POA.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SAJ": {
+        "label": "Jacksonville",
+        "file": "usace_district/SAJ.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SAM": {
+        "label": "Mobile",
+        "file": "usace_district/SAM.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SAW": {
+        "label": "Wilmington",
+        "file": "usace_district/SAW.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SWG": {
+        "label": "Galveston",
+        "file": "usace_district/SWG.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SWL": {
+        "label": "Little Rock",
+        "file": "usace_district/SWL.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "usace_division": {
+      "LRD": {
+        "label": "Great Lakes & Ohio",
+        "file": "usace_division/LRD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "MVD": {
+        "label": "Mississippi Valley",
+        "file": "usace_division/MVD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NAD": {
+        "label": "North Atlantic",
+        "file": "usace_division/NAD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "NWD": {
+        "label": "Northwestern",
+        "file": "usace_division/NWD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "POD": {
+        "label": "Pacific Ocean",
+        "file": "usace_division/POD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SAD": {
+        "label": "South Atlantic",
+        "file": "usace_division/SAD.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "SWD": {
+        "label": "Southwestern",
+        "file": "usace_division/SWD.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "climate_hub": {
+      "1": {
+        "label": "Northeast",
+        "file": "climate_hub/1.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "2": {
+        "label": "Southeast",
+        "file": "climate_hub/2.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "3": {
+        "label": "Midwest",
+        "file": "climate_hub/3.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "4": {
+        "label": "Southern Plains & Gulf Coast",
+        "file": "climate_hub/4.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "5": {
+        "label": "Northern Plains",
+        "file": "climate_hub/5.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "6": {
+        "label": "Southwest",
+        "file": "climate_hub/6.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "7": {
+        "label": "Northwest",
+        "file": "climate_hub/7.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "rdews": {
+      "2": {
+        "label": "Upper Colorado River Basin",
+        "file": "rdews/2.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "4": {
+        "label": "North Central",
+        "file": "rdews/4.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "5": {
+        "label": "Southern Plains",
+        "file": "rdews/5.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "7": {
+        "label": "Intermountain West",
+        "file": "rdews/7.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "8": {
+        "label": "Peninsula Florida",
+        "file": "rdews/8.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "rcc": {
+      "1": {
+        "label": "High Plains",
+        "file": "rcc/1.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "2": {
+        "label": "Midwest",
+        "file": "rcc/2.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "3": {
+        "label": "Northeast",
+        "file": "rcc/3.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "4": {
+        "label": "Southern",
+        "file": "rcc/4.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "5": {
+        "label": "Southeast",
+        "file": "rcc/5.csv",
+        "multi": false,
+        "rows": 1367
+      },
+      "6": {
+        "label": "Western",
+        "file": "rcc/6.csv",
+        "multi": false,
+        "rows": 1367
+      }
+    },
+    "tribal": {},
+    "urban": {}
+  }
+}
